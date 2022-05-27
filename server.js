@@ -6,6 +6,7 @@ const { connection } = require('./db');
 const router = express.Router();
 
 
+
 db.connect(async function () {
     start();
 })
@@ -59,6 +60,8 @@ function start() {
 
                     Quit();
                     break;
+                    default:
+                        break;
             }
 
         }
@@ -69,7 +72,7 @@ function start() {
 function viewEmployees() {
     const request = "SELECT * FROM employees";
     db.query(request, function(err, res) {
-      if (err) throw err;
+        console.log(err)
       console.log("Viewing All Employees");
       console.table(res);
       inquirer.prompt([
@@ -180,8 +183,9 @@ function newEmployee() {
         
     ])
     .then(function (response) {
-        connection.query('INSERT INTO employees(first_name, last_name, roles_id, manager_id) VALUES (?,?,?,?)', 
-        [response.FirstName, response.LastName, response.EmployeeID, response.ManagerID]), function(err,response) {
+        console.log(response)
+        connection.query(`INSERT INTO employees(first_name, last_name, roles_id, manager_id) VALUES (${response.FirstName},${response.LastName},${response.EmployeeID},${response.ManagerID})`, 
+        function(err,response) {
             if (err) throw err;
             console.table(res);
             inquirer.prompt([
@@ -204,7 +208,7 @@ function newEmployee() {
                            Quit();
                }
            })
-        }
+        })
     })
 }
 
